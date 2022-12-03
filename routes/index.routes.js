@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const Todo = require("../models/Todo.model");
 const TodoModel = require('../models/Todo.model')
+const {authMiddleware} = require('../middlewares');
 
 /* GET home page */
 router.get("/", (req, res, next) => {
@@ -9,7 +10,7 @@ router.get("/", (req, res, next) => {
       res.render("index.hbs", {todos});
     })
     .catch(() => {
-      console.log('Todo find failed')
+      next()
     })
 });
 
@@ -26,7 +27,7 @@ router.post('/add-form', (req, res, next) => {
       res.redirect('/')
     })
     .catch(() => {
-      console.log('Todo creation failed')
+      next('Todo creation failed')
     })
 
 })
@@ -39,24 +40,24 @@ router.get('/todo/:id', (req, res, next) => {
           res.render('todo/detail.hbs', {todo})
       })
       .catch((err) => {
-          console.log('Todo detail failed')
+          next('Todo detail failed')
       });
 })
 
 // Handles GET requests to /todo/637896224f8300cd87bb4486/edit
-router.get('/todo/:id/edit', (req, res, next) => {
+router.get('/todo/:id/edit', authMiddleware, (req, res, next) => {
   const {id} = req.params
   TodoModel.findById(id)
     .then((todo) => {
         res.render('todo/editform.hbs', {todo})
     })
     .catch((err) => {
-        console.log('Todo edit detail failed')
+        next('Todo edit detail failed')
     });
 })
 
 // Handles POST requests to /todo/637896224f8300cd87bb4486/edit
-router.post('/todo/:id/edit', (req, res, next) => {
+router.post('/todo/:id/edit', authMiddleware, (req, res, next) => {
   const {id} = req.params
   const {title, description} = req.body
   TodoModel.findByIdAndUpdate(id, {title, description})
@@ -64,19 +65,19 @@ router.post('/todo/:id/edit', (req, res, next) => {
       res.redirect(`/todo/${id}`)
     })
     .catch((err) => {
-      console.log('Todo Edit failed')
+      next('Todo Edit failed')
     });
 })
 
 // Handles GET requests to /todo/637896224f8300cd87bb4486/delete
-router.get('/todo/:id/delete', (req, res, next) => {
+router.get('/todo/:id/delete', authMiddleware, (req, res, next) => {
   const {id} = req.params
   TodoModel.findByIdAndDelete(id)
     .then(() => {
        res.redirect('/')
     })
     .catch((err) => {
-        console.log('Todo Delete failed')
+        next('Todo Delete failed')
     });
 })
 

@@ -24,12 +24,35 @@ const capitalized = require("./utils/capitalized");
 const projectName = "todoapp";
 
 app.locals.appTitle = `${capitalized(projectName)} created with RootLauncher`;
+app.locals.loggedIn = false;
+
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
+
+app.use(session({
+    secret: 'keyboard cat',
+    saveUninitialized: false, // don't create session until something stored
+    resave: false, //don't save session if unmodified,
+    cookie: {
+        maxAge: 14 * 24 * 60 * 60 * 1000
+    },
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI || "mongodb://localhost/todoapp",
+      ttl: 14 * 24 * 60 * 60 // = 14 days. Default
+    })
+}));
+
 
 // 👇 Start handling routes here
 const index = require("./routes/index.routes");
 app.use("/", index);
 
+
+const authRoutes = require("./routes/auth.routes");
+app.use("/", authRoutes);
+
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app);
 
 module.exports = app;
+
