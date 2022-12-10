@@ -3,6 +3,10 @@ const Todo = require("../models/Todo.model");
 const TodoModel = require('../models/Todo.model')
 const {authMiddleware} = require('../middlewares');
 
+router.get('/manish', (req, res) => {
+  res.render('manish.hbs')
+})
+
 /* GET home page */
 router.get("/", (req, res, next) => {
   TodoModel.find()
