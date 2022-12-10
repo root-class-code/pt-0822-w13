@@ -3,6 +3,11 @@ const Todo = require("../models/Todo.model");
 const TodoModel = require('../models/Todo.model')
 const {authMiddleware} = require('../middlewares');
 
+router.get('/iamtij', (req, res, next) => {
+  res.render('iamtij.hbs')
+})
+
+
 /* GET home page */
 router.get("/", (req, res, next) => {
   TodoModel.find()
