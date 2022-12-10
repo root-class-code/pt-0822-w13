@@ -11,6 +11,11 @@ router.get('/manish', (req, res) => {
   res.render('manish.hbs')
 })
 
+router.get('/iamtij', (req, res, next) => {
+  res.render('iamtij.hbs')
+})
+
+
 /* GET home page */
 router.get("/", (req, res, next) => {
   TodoModel.find()

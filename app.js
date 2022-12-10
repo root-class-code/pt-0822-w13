@@ -22,9 +22,13 @@ require("./config")(app);
 const capitalized = require("./utils/capitalized");
 const projectName = "todoapp";
 
+<<<<<<< HEAD
 app.locals.appTitle = `${capitalized(
   projectName
 )} created with RootLauncher version2`;
+=======
+app.locals.appTitle = `${capitalized(projectName)} created with TJ`;
+>>>>>>> f4fdc2d071e6e0983a5b51c0102318d4d9b105c4
 app.locals.loggedIn = false;
 
 const session = require("express-session");
